@@ -124,8 +124,12 @@ def load_fabfile(path):
             # Add to front, then remove from original position
             sys.path.insert(0, directory)
             del sys.path[i + 1]
-    # Perform the import (trimming off the .py)
-    imported = __import__(os.path.splitext(fabfile)[0])
+    # trim off the .py
+    fabfile_trimmed = os.path.splitext(fabfile)[0]
+    if '.' in fabfile_trimmed:
+        abort("fabfile has '.' in the filename!")
+    # Perform the import
+    imported = __import__(fabfile_trimmed)
     # Remove directory from path if we added it ourselves (just to be neat)
     if added_to_path:
         del sys.path[0]
